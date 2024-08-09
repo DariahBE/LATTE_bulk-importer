@@ -17,3 +17,8 @@ edges:
     - source_node: (id, int)
     - target_node: (id, int)
     - relation: (label, str)
+
+conn: 
+  database: abc
+  username: abc
+  password: abc

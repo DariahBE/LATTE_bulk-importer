@@ -46,6 +46,7 @@ class ImportTool:
 
 if __name__ == "__main__":
     config_path = 'config.yaml'
+    #todo: read from YAML 
     db_uri = "bolt://localhost:7687"
     db_user = "neo4j"
     db_password = "your_password"

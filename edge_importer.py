@@ -17,7 +17,7 @@ class EdgeImporter:
         """Close the Neo4j driver connection."""
         self.driver.close()
 
-    def create_edge(self, start_label, end_label, start_id, end_id, relationship):
+    def create_edge(self, start_id, end_id, relationship):
         """
         Create an edge between two nodes in the database.
 
@@ -30,25 +30,23 @@ class EdgeImporter:
         """
         with self.driver.session() as session:
             query = f"""
-            MATCH (a:{start_label} {{id: $start_id}})
-            MATCH (b:{end_label} {{id: $end_id}})
+            MATCH (a:) where id(a) = $start_id
+            MATCH (b:) where id(b) = $end_id
             CREATE (a)-[r:{relationship}]->(b)
             """
             session.run(query, start_id=start_id, end_id=end_id)
 
-    def import_edges_from_csv(self, file_path, start_label, end_label, relationship, start_id_column, end_id_column):
+    def import_edges_from_csv(self, file_path, start_id_column, end_id_column, relationship_column):
         """
         Import edges from a CSV file into the database.
 
         Args:
             file_path (str): Path to the CSV file.
-            start_label (str): Label of the starting node.
-            end_label (str): Label of the ending node.
-            relationship (str): Relationship type.
-            start_id_column (str): CSV column name for start node IDs.
-            end_id_column (str): CSV column name for end node IDs.
+            start_id_column (int): CSV column id for start node IDs.
+            end_id_column (int): CSV column id for end node IDs.
+            relationship_column (int): Relationship column id for the relationship between the nodes. 
         """
         with open(file_path, mode='r') as file:
             reader = csv.DictReader(file)
             for row in reader:
-                self.create_edge(start_label, end_label, row[start_id_column], row[end_id_column], relationship)
+                self.create_edge(row[start_id_column], row[end_id_column], row[relationship_column])
