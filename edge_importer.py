@@ -9,7 +9,7 @@ class EdgeImporter:
         driver: Neo4j driver to interact with the database.
     """
 
-    def __init__(self, uri, user, password):
+    def __init__(self, uri, user, password, databases):
         """Initialize the EdgeImporter with Neo4j connection details."""
         self.driver = GraphDatabase.driver(uri, auth=(user, password))
 

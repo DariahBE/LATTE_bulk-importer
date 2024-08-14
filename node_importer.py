@@ -9,7 +9,7 @@ class NodeImporter:
         driver: Neo4j driver to interact with the database.
     """
 
-    def __init__(self, uri, user, password):
+    def __init__(self, uri, user, password, database):
         """Initialize the NodeImporter with Neo4j connection details."""
         self.driver = GraphDatabase.driver(uri, auth=(user, password))
 
@@ -43,8 +43,12 @@ class NodeImporter:
             reader = csv.DictReader(file)
             for row in reader:
                 properties = {}
-                for csv_column, (property_name, data_type) in property_mapping.items():
-                    properties[property_name] = self.cast_type(row[csv_column], data_type)
+                print(property_mapping)
+                print(type(property_mapping))
+                for csv_column in property_mapping:
+                    print(type(csv_column))
+                    print(csv_column)
+                    properties[csv_column] = self.cast_type(row[int(csv_column)], data_type)
                 self.create_node(label, properties)
 
     @staticmethod

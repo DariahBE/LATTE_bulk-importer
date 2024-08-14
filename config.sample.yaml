@@ -1,0 +1,26 @@
+nodes:
+  - file: data/texts.csv
+    label: Text
+    properties:
+      - id: (id, int)
+      - text: (text, str)
+      - publisher: (publisher, str)
+  - file: data/annotations.csv
+    label: Annotation
+    properties:
+      - id: (id, int)
+      - start: (start, int)
+      - stop: (stop, int)
+
+edges:
+  - file: edges.csv
+    properties:
+    - source_node: (id, int)
+    - target_node: (id, int)
+    - relation: (label, str)
+
+conn: 
+  uri: abc
+  database: abc
+  username: abc
+  password: abc

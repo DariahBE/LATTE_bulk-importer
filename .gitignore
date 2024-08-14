@@ -1,3 +1,7 @@
+# Ignore the login sensitive config.yaml file 
+config.yaml
+# Ignore the data folder:
+data/   
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -161,3 +165,5 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 scripts/__pycache__/color_functions.cpython-311.pyc
+config.yaml
+config.yaml

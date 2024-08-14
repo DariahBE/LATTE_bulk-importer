@@ -1,24 +1,26 @@
 nodes:
-  - file: nodes_person.csv
-    label: Person
+  - file: data/texts.csv
+    label: Text
     properties:
-      - id: (id, int)
-      - name: (name, str)
-      - age: (age, int)
-  - file: nodes_city.csv
-    label: City
+      - 0: ["id", "int"]
+      - 1: ["text", "str"]
+      - 2: ["publisher", "str"]
+  - file: data/annotations.csv
+    label: Annotation
     properties:
-      - id: (id, int)
-      - name: (name, str)
+      - 0: ["id", "int"]
+      - 1: [start, int]
+      - 2: [stop, int]
 
 edges:
-  - file: edges_lives_in.csv
+  - file: edges.csv
     properties:
-    - source_node: (id, int)
-    - target_node: (id, int)
-    - relation: (label, str)
+    - 0: [id, int]
+    - 1: [id, int]
+    - 2: [label, str]
 
-conn: 
-  database: abc
-  username: abc
-  password: abc
+conn:
+  - uri: neo4j://localhost:7699
+  - database: dhbenelux.db
+  - username: neo4j
+  - password: password

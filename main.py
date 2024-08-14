@@ -1,6 +1,6 @@
 import yaml
-from node_importer.py import NodeImporter
-from edge_importer.py import EdgeImporter
+from node_importer import NodeImporter
+from edge_importer import EdgeImporter
 
 class ImportTool:
     """
@@ -12,13 +12,19 @@ class ImportTool:
         edge_importer (EdgeImporter): Instance of EdgeImporter for importing edges.
     """
 
-    def __init__(self, config_path, db_uri, db_user, db_password):
+    def __init__(self, config_path):
         """Initialize the ImportTool with the configuration file and Neo4j connection details."""
         with open(config_path, 'r') as file:
             self.config = yaml.safe_load(file)
-
-        self.node_importer = NodeImporter(db_uri, db_user, db_password)
-        self.edge_importer = EdgeImporter(db_uri, db_user, db_password)
+        db_vars = {}
+        for item in self.config.get('conn', []):
+            db_vars.update(item)
+        db_uri = db_vars['uri']
+        db_database = db_vars['database']
+        db_user = db_vars['username']
+        db_password = db_vars['password']
+        self.node_importer = NodeImporter(db_uri, db_user, db_password, db_database)
+        self.edge_importer = EdgeImporter(db_uri, db_user, db_password, db_database)
 
     def import_data(self):
         """Import nodes and edges according to the configuration file."""
@@ -32,8 +38,6 @@ class ImportTool:
         for edge_config in self.config.get('edges', []):
             self.edge_importer.import_edges_from_csv(
                 file_path=edge_config['file'],
-                start_label=edge_config['start_label'],
-                end_label=edge_config['end_label'],
                 relationship=edge_config['relationship'],
                 start_id_column=edge_config['start_id'],
                 end_id_column=edge_config['end_id']
@@ -46,12 +50,8 @@ class ImportTool:
 
 if __name__ == "__main__":
     config_path = 'config.yaml'
-    #todo: read from YAML 
-    db_uri = "bolt://localhost:7687"
-    db_user = "neo4j"
-    db_password = "your_password"
 
-    tool = ImportTool(config_path, db_uri, db_user, db_password)
+    tool = ImportTool(config_path)
     try:
         tool.import_data()
     finally:
