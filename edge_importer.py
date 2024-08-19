@@ -17,7 +17,7 @@ class EdgeImporter:
         """Close the Neo4j driver connection."""
         self.driver.close()
 
-    def create_edge(self, start_id, end_id, relationship):
+    def create_edge(self, start_label, start_id, end_label, end_id, relationship):
         """
         Create an edge between two nodes in the database.
 
@@ -30,23 +30,26 @@ class EdgeImporter:
         """
         with self.driver.session() as session:
             query = f"""
-            MATCH (a:) where id(a) = $start_id
-            MATCH (b:) where id(b) = $end_id
+            MATCH (a) where a.{start_label} = $start_id
+            MATCH (b) where b.{end_label} = $end_id
             CREATE (a)-[r:{relationship}]->(b)
             """
+            print(query)
             session.run(query, start_id=start_id, end_id=end_id)
 
-    def import_edges_from_csv(self, file_path, start_id_column, end_id_column, relationship_column):
+    def import_edges_from_csv(self, file_path, edge_props):
         """
         Import edges from a CSV file into the database.
 
         Args:
             file_path (str): Path to the CSV file.
-            start_id_column (int): CSV column id for start node IDs.
-            end_id_column (int): CSV column id for end node IDs.
-            relationship_column (int): Relationship column id for the relationship between the nodes. 
+            edge_props = dict with the YAML defined properties for the nodes. 
         """
+        #EDGE properties are tripples: StartID, stopID, edgelabel!
+        #We only need the properties to get the user chosen names for start- and stop id
+        startlabel = edge_props[0][0][0]
+        stoplabel = edge_props[1][1][0]
         with open(file_path, mode='r') as file:
-            reader = csv.DictReader(file)
+            reader = csv.reader(file, delimiter=',', escapechar='\\',quotechar='"', skipinitialspace=True)
             for row in reader:
-                self.create_edge(row[start_id_column], row[end_id_column], row[relationship_column])
+                self.create_edge(startlabel, int(row[0]), stoplabel, int(row[1]), row[2])

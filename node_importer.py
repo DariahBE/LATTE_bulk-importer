@@ -40,15 +40,15 @@ class NodeImporter:
             property_mapping (dict): Mapping of CSV columns to node properties and data types.
         """
         with open(file_path, mode='r') as file:
-            reader = csv.DictReader(file)
+            reader = csv.reader(file, skipinitialspace=True, quotechar='"', delimiter=',', escapechar='\\')
             for row in reader:
                 properties = {}
-                print(property_mapping)
-                print(type(property_mapping))
                 for csv_column in property_mapping:
-                    print(type(csv_column))
-                    print(csv_column)
-                    properties[csv_column] = self.cast_type(row[int(csv_column)], data_type)
+                    col = list(csv_column.keys())[0]
+                    data_type = csv_column[col][1]
+                    propname = csv_column[col][0]
+                    # print(list(csv_column.keys())[0])
+                    properties[propname] = self.cast_type(row[int(col)], data_type)
                 self.create_node(label, properties)
 
     @staticmethod
@@ -63,10 +63,10 @@ class NodeImporter:
         Returns:
             The value cast to the specified data type.
         """
-        if data_type == int:
+        if data_type == 'int':
             return int(value)
-        elif data_type == float:
+        elif data_type == 'float':
             return float(value)
-        elif data_type == bool:
+        elif data_type == 'bool':
             return value.lower() in ("yes", "true", "1")
         return value  # Default to str

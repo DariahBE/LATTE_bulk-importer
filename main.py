@@ -37,10 +37,8 @@ class ImportTool:
 
         for edge_config in self.config.get('edges', []):
             self.edge_importer.import_edges_from_csv(
-                file_path=edge_config['file'],
-                relationship=edge_config['relationship'],
-                start_id_column=edge_config['start_id'],
-                end_id_column=edge_config['end_id']
+                file_path = edge_config['file'],
+                edge_props = edge_config['properties']
             )
 
     def close(self):
