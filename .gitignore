@@ -167,3 +167,4 @@ cython_debug/
 scripts/__pycache__/color_functions.cpython-311.pyc
 config.yaml
 config.yaml
+pyvenv.cfg
