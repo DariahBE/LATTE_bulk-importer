@@ -34,7 +34,6 @@ class EdgeImporter:
             MATCH (b) where b.{end_label} = $end_id
             CREATE (a)-[r:{relationship}]->(b)
             """
-            print(query)
             session.run(query, start_id=start_id, end_id=end_id)
 
     def import_edges_from_csv(self, file_path, edge_props):
